@@ -4,7 +4,8 @@ if os.path.exists("env.py"):
     import env
 
 
-app = Flask(__name__) # Create an instance of Flask
+# Create an instance of Flask
+app = Flask(__name__)
 
 
 @app.route("/")
