@@ -54,7 +54,8 @@ def register():
 
 @app.route("/add_recipe")
 def add_recipe():
-    return render_template("add_recipe.html")
+    categories = mongo.db.categories.find()
+    return render_template("add_recipe.html", categories=categories)
 
 
 if __name__ == "__main__":
