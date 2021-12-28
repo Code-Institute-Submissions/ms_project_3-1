@@ -39,7 +39,7 @@ def register():
         if existing_user:
             flash("Username already exists")
             return redirect(url_for("register"))
-
+        
         register = {
             "username": request.form.get("username").lower(),
             "password": generate_password_hash(request.form.get("password"))
@@ -52,8 +52,18 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/add_recipe")
+@app.route("/add_recipe", methods=["GET","POST"])
 def add_recipe():
+    if request.method == "POST":
+        recipe = {
+            "recipe_name": request.form.get("recipe_name"),
+            "category_name": request.form.get("category_name"),
+            "ingredients": request.form.get("ingredients"),
+            "method": request.form.get("method")
+        }
+        mongo.db.recipes.insert_one(recipe)
+        flash("Recipe added!") # not working
+        
     categories = mongo.db.categories.find()
     return render_template("add_recipe.html", categories=categories)
 
