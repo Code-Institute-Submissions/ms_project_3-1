@@ -110,6 +110,7 @@ def add_recipe():
     return render_template("add_recipe.html", categories=categories)
 
 
+# This function is incomplete
 @app.route("/edit_recipe/<recipe_id>", methods=["GET", "POST"])
 def edit_recipe(recipe_id):
     recipe = mongo.db.recipes.find_one({"_id": ObjectId(recipe_id)})
