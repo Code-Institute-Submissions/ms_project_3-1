@@ -10,6 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 if os.path.exists("env.py"):
     import env
 
+
 # Create an instance of Flask
 app = Flask(__name__)
 
@@ -26,7 +27,7 @@ mongo = PyMongo(app)
 @app.route("/")
 @app.route("/get_recipes")
 def get_recipes():
-    recipes = mongo.db.recipes.find()
+    recipes = list(mongo.db.recipes.find())
     return render_template("recipes.html", recipes=recipes)
 
 
@@ -82,8 +83,6 @@ def login():
 @app.route("/add_recipe", methods=["GET", "POST"])
 def add_recipe():
     if request.method == "POST":
-        #UI needs to be updated to include all fields
-        # add image to database
         recipe_image = None
         result = None
         if 'recipe_image' in request.files:
@@ -96,14 +95,16 @@ def add_recipe():
         recipe = {
             "recipe_name": request.form.get("recipe_name"),
             "category_name": request.form.get("category_name"),
-            "ingredients": request.form.get("ingredients").split('\n'),
-            "method": request.form.get("method").split('\n'),
+            "added_by": session["user"],
+            "ingredients": request.form.getlist("ingredients"),
+            "method": request.form.getlist("method"),
             "image_filename": recipe_image.filename,
             "image_id": result
         }
 
         mongo.db.recipes.insert_one(recipe)
-        flash("Recipe added!") # not working yet
+        flash("Recipe added!")
+        return redirect(url_for("get_recipes"))
         
     categories = mongo.db.categories.find()
     return render_template("add_recipe.html", categories=categories)
