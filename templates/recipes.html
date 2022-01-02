@@ -1,12 +1,30 @@
 {% extends "base.html" %}
 {% block content %}
 
-    {% for recipe in recipes %}
-        {{ recipe.category_name }}<br>
-        {{ recipe.recipe_name }}<br>
-        {{ recipe.ingredients }}<br>
-        {{ recipe.preparation }}<br>
-        {{ recipe.added_by }}<br>
-    {% endfor %}
+    <div class="container">
+        <div class="col s12 m7">
+            {% for recipe in recipes %}
+            <h2 class="header">{{ recipe.recipe_name }}</h2>
+            <div class="card horizontal">
+                <div class="card-image">
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('img_uploads', filename=recipe['image_filename']) }}" alt="item_image" />
+                    {% else %}
+                        <img src="{{ url_for('static', filename='images/no-image.jpg') }}" alt="default_recipe_image" />
+                    {% endif %}
+                </div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <p>Category: {{ recipe.category_name }}</p>
+                        <p>Added by: {{ recipe.added_by }}</p>
+                        <p>Ingredients: {{ recipe.ingredients }}</p>
+                        <p>Method: {{ recipe.method }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-{% endblock %}
+
+{% endblock %}         
